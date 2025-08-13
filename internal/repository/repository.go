@@ -5,12 +5,14 @@ import (
 	"lotest/internal/models"
 	"lotest/internal/service"
 	"strings"
+	"sync"
 
 	"github.com/google/uuid"
 )
 
 type Repo struct {
 	Tasks map[string]models.Task
+	mu    sync.RWMutex
 }
 
 func NewRepo() service.Repositorer {
@@ -21,6 +23,9 @@ func NewRepo() service.Repositorer {
 
 func (r *Repo) CreateTask(ctx context.Context, req models.RequestCreateTask) string {
 	id := uuid.New().String()
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
 
 	r.Tasks[id] = models.Task{
 		ID:          id,
@@ -34,6 +39,9 @@ func (r *Repo) CreateTask(ctx context.Context, req models.RequestCreateTask) str
 
 func (r *Repo) GetAllTasks(ctx context.Context, status string) []models.Task {
 	var tasks []models.Task
+
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
 	if status == "" {
 		for _, task := range r.Tasks {
@@ -53,6 +61,9 @@ func (r *Repo) GetAllTasks(ctx context.Context, status string) []models.Task {
 }
 
 func (r *Repo) GetTaskByID(ctx context.Context, id string) (models.Task, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
 	task, ok := r.Tasks[id]
 	if !ok {
 		return models.Task{}, models.ErrorTaskNotFound

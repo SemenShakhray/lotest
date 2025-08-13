@@ -21,13 +21,13 @@ git clone https://github.com/SemenShakhray/lotest.git
 cd lotest
 ```
 
-3. Соберите приложение
+2. Соберите приложение:
 
 ```bash
 go build -o lotest ./cmd/main.go
 ```
 
-4. Запуск
+3. Запуск:
 
 ``` bash
 ./lotest
@@ -35,7 +35,7 @@ go build -o lotest ./cmd/main.go
 
 ## Примеры запросов
 
-1. Создание задачи
+1. Создание задачи:
 
 ```bash
 curl -X POST http://localhost:8080/tasks \
@@ -43,19 +43,19 @@ curl -X POST http://localhost:8080/tasks \
   -d '{"title":"Test Task","description":"This is a test"}'
 ```
 
-2. Получение всех задач
+2. Получение всех задач:
 
 ```bash
 curl -X GET http://localhost:8080/tasks
 ```
 
-3. Получение задач с фильтром по статусу 
+3. Получение задач с фильтром по статусу: 
 
 ```bash
 curl -X GET http://localhost:8080/tasks?status=pending
 ```
 
-4. Получение задачи по ID
+4. Получение задачи по ID:
 
 ```bash
 curl -X GET http://localhost:8080/task/<id>
